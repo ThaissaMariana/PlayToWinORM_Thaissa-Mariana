@@ -11,7 +11,6 @@ app.use(
         extended: true,
     })
 );
-
 app.use(express.json());
 
 app.get("/usuarios/novo", (req, res) => {
