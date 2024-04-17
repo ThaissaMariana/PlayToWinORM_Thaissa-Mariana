@@ -11,6 +11,7 @@ app.use(
         extended: true,
     })
 );
+
 app.use(express.json());
 
 app.get("/usuarios/novo", (req, res) => {
@@ -18,20 +19,18 @@ app.get("/usuarios/novo", (req, res) => {
  });
 
 app.post("/usuarios/novo", async (req, res) => { 
-   const nickname = req.body.nickname;
-   const nome = req.body.nome;
+    const dadosUsuario = {
+      nickname: req.body.nickname,
+      nome: req.body.nome,
+    };
 
-   const dadosUsuario = {
-    nickname,
-    nome,
-   };
-
-   const usuario = await Usuario.create(dadosUsuario);
-
-   res.send("Usuário inserido sob o id " + usuario.id);
+    const usuario = await Usuario.create(dadosUsuario);
+    res.send("Usuário inserido sob o id " + usuario.id);
 });
 
-app.listen(8000);
+app.listen(8000, () => {
+    console.log("Server rodando!");
+});
 
 conn
 .sync()
