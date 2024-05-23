@@ -1,3 +1,4 @@
+// Importações de módulos
 require("dotenv").config();
 const conn = require("./db/conn");
 const Usuario = require("./models/Usuario");
@@ -12,7 +13,7 @@ const app = express();
 app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
 
-//
+//Configurações no express para facilitar a captura de dados recebidos de formulários
 app.use(
     express.urlencoded({
         extended: true,
@@ -20,6 +21,17 @@ app.use(
 );
 
 app.use(express.json());
+
+app.get("/", (req, res) => {
+    res.render("home");
+});
+
+app.get("/usuarios", async (req, res) => {
+    
+    const usuarios = await Usuario.findAll ({ raw: true});
+
+    res.render("usuarios", { usuarios });
+});
 
 app.get("/usuarios/novo", (req, res) => {
     res.render("formUsuario");
