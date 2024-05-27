@@ -52,6 +52,13 @@ app.post("/usuarios/novo", async (req, res) => {
     res.send("Usuário inserido sob o id " + usuario.id);
 });
 
+app.get("/usuarios/:id/update", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const usuario = await Usuario.findByPk(id, { raw: true });
+
+  res.render("formUsuario", { usuario });
+});
+
 app.post("/jogos/novo", async (req, res) => {
     const dadosJogo = {
         titulo: req.body.titulo,
@@ -62,6 +69,7 @@ app.post("/jogos/novo", async (req, res) => {
     const jogo = await Jogo.create(dadosJogo);
     res.send("Jogo inserido sob o id " + jogo.id);
 });
+
 
 app.listen(8000, () => {
     console.log("Server rodando!");
