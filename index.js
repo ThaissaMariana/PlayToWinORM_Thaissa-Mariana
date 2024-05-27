@@ -27,8 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/usuarios", async (req, res) => {
-    
-    const usuarios = await Usuario.findAll ({ raw: true});
+    const usuarios = await Usuario.findAll ({ raw: true });
 
     res.render("usuarios", { usuarios });
 });
@@ -57,6 +56,23 @@ app.get("/usuarios/:id/update", async (req, res) => {
   const usuario = await Usuario.findByPk(id, { raw: true });
 
   res.render("formUsuario", { usuario });
+});
+
+app.post("/usuarios/:id/update", async (req, res) => {
+    const id = parseInt(req.params.id);
+
+    const dadosUsuario = {
+        nickname: req.body.nickname,
+        nome: req.body.nome,
+    };
+
+    const retorno = await Usuario.update(dadosUsuario, { where: { id: id }, });
+
+    if(retorno>0){
+        res.redirect("/usuarios");
+    } else {
+        res.send("Erro ao atualizar usuário")
+    }
 });
 
 app.post("/jogos/novo", async (req, res) => {
