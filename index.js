@@ -5,6 +5,7 @@ const Usuario = require("./models/Usuario");
 const Jogo = require("./models/Jogo");
 const express = require("express");
 const exphbs = require("express-handlebars");
+const { where } = require("sequelize");
 
 // Instanciação do servidor:
 const app = express();
@@ -32,12 +33,18 @@ app.get("/usuarios", async (req, res) => {
     res.render("usuarios", { usuarios });
 });
 
+app.get("/jogos", async (req, res) => {
+    const jogos = await Jogo.findAll ({ raw: true });
+
+    res.render("jogos", { jogos });
+});
+
 app.get("/usuarios/novo", (req, res) => {
     res.render("formUsuario");
  });
 
  app.get("/jogos/novo", (req, res) => {
-    res.sendFile(`${__dirname}/views/formJogo.html`);
+    res.render("formJogo");
 });
 
 
@@ -75,6 +82,18 @@ app.post("/usuarios/:id/update", async (req, res) => {
     }
 });
 
+app.post("/usuarios/:id/delete", async (req, res) => {
+    const id = parseInt(req.params.id);
+
+    const retorno = await Usuario.destroy({ where: { id: id } });
+
+    if (retorno > 0){
+        res.redirect("/usuarios");
+    } else {
+        res.send("Erro ao excluir usuário")
+    }
+});
+
 app.post("/jogos/novo", async (req, res) => {
     const dadosJogo = {
         titulo: req.body.titulo,
@@ -86,6 +105,42 @@ app.post("/jogos/novo", async (req, res) => {
     res.send("Jogo inserido sob o id " + jogo.id);
 });
 
+app.get("/jogos/:id/update", async (req, res) => {
+    const id = parseInt(req.params.id);
+    const jogo = await Jogo.findByPk(id, { raw: true });
+  
+    res.render("formJogo", { jogo });
+  });
+  
+  app.post("/jogos/:id/update", async (req, res) => {
+      const id = parseInt(req.params.id);
+  
+      const dadosJogo = {
+          titulo: req.body.titulo,
+          descricao: req.body.descricao,
+          precoBase: req.body.precoBase
+      };
+  
+      const retorno = await Jogo.update(dadosJogo, { where: { id: id }, });
+  
+      if(retorno>0){
+          res.redirect("/jogos");
+      } else {
+          res.send("Erro ao atualizar usuário")
+      }
+  });
+  
+  app.post("/jogos/:id/delete", async (req, res) => {
+      const id = parseInt(req.params.id);
+  
+      const retorno = await Jogo.destroy({ where: { id: id } });
+  
+      if (retorno > 0){
+          res.redirect("/jogos");
+      } else {
+          res.send("Erro ao excluir usuário")
+      }
+  });
 
 app.listen(8000, () => {
     console.log("Server rodando!");
