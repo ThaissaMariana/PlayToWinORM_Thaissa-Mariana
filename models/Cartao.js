@@ -15,7 +15,8 @@ const Cartao = db.define("Cartao", {
         type: DataTypes.STRING,
         allowNull: false,
     },
-},{
+},
+{
     tableName: "Cartoes",
   }
 );

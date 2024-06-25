@@ -8,6 +8,8 @@ const express = require("express");
 const exphbs = require("express-handlebars");
 const { where } = require("sequelize");
 
+
+
 // Instanciação do servidor:
 const app = express();
 
@@ -127,7 +129,7 @@ app.get("/jogos/:id/update", async (req, res) => {
       if(retorno>0){
           res.redirect("/jogos");
       } else {
-          res.send("Erro ao atualizar usuário")
+          res.send("Erro ao atualizar jogo")
       }
   });
   
@@ -139,12 +141,12 @@ app.get("/jogos/:id/update", async (req, res) => {
       if (retorno > 0){
           res.redirect("/jogos");
       } else {
-          res.send("Erro ao excluir usuário")
+          res.send("Erro ao excluir jogo")
       }
   });
 
 
-//Rotas para cartoes
+//Rotas para cartões
 
 //Ver cartões do usuário
 app.get("/usuarios/:id/cartoes", async (req, res) =>{
@@ -168,7 +170,7 @@ app.get("/usuarios/:id/novoCartao", async (req, res) =>{
 });
 
 //Cadastro de cartão
-app.get("/usuarios/:id/novoCartao", async (req, res) =>{
+app.post("/usuarios/:id/novoCartao", async (req, res) =>{
     const id = parseInt(req.params.id);
     
     const dadosCartao = {
@@ -178,9 +180,9 @@ app.get("/usuarios/:id/novoCartao", async (req, res) =>{
         usuarioId: id,
     };
 
-    await Cartao.create(dadosCartao)
+    await Cartao.create(dadosCartao);
 
-    res.redirect(`/usuarios/${id}/cartoes`);
+  res.redirect(`/usuarios/${id}/cartoes`);
 });
 
 app.listen(8000, () => {
