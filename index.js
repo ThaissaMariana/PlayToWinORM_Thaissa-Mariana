@@ -7,6 +7,7 @@ const Jogo = require("./models/Jogo");
 const express = require("express");
 const exphbs = require("express-handlebars");
 const { where } = require("sequelize");
+const Conquista = require("./models/Conquista");
 
 
 
@@ -183,6 +184,46 @@ app.post("/usuarios/:id/novoCartao", async (req, res) =>{
     await Cartao.create(dadosCartao);
 
   res.redirect(`/usuarios/${id}/cartoes`);
+});
+
+
+//Rotas para conquistas
+
+//Ver conquistas do jogo
+app.get("/jogos/:id/conquistas", async (req, res) =>{
+    const id = parseInt(req.params.id);
+    const jogo = await Jogo.findByPk(id, { raw: true });
+
+    const conquistas = await Conquista.findAll({
+        raw: true,
+        where: { JogoId: id},
+    })
+    
+    res.render("conquistas.handlebars", { jogo, conquistas });
+});
+
+//Formulário de cadastro de conquistas
+app.get("/jogos/:id/novaConquista", async (req, res) =>{
+    const id = parseInt(req.params.id);
+    const jogo = await Jogo.findByPk(id, { raw: true });
+
+    res.render("formConquista", { jogo });
+});
+
+//Cadastro de conquista
+app.post("/jogos/:id/novaConquista", async (req, res) =>{
+    const id = parseInt(req.params.id);
+    
+    const dadosConquista = {
+        nome: req.body.numero,
+        descricao: req.body.nome,
+        pontos: req.body.pontos,
+        JogoId: id,
+    };
+
+    await Conquista.create(dadosConquista);
+
+  res.redirect(`/jogos/${id}/conquistas`);
 });
 
 app.listen(8000, () => {
