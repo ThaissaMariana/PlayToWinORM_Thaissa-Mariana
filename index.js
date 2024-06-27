@@ -178,7 +178,7 @@ app.post("/usuarios/:id/novoCartao", async (req, res) =>{
         numero: req.body.numero,
         nome: req.body.nome,
         codSeguranca: req.body.codSeguranca,
-        usuarioId: id,
+        UsuarioId: id,
     };
 
     await Cartao.create(dadosCartao);
@@ -215,9 +215,8 @@ app.post("/jogos/:id/novaConquista", async (req, res) =>{
     const id = parseInt(req.params.id);
     
     const dadosConquista = {
-        nome: req.body.numero,
-        descricao: req.body.nome,
-        pontos: req.body.pontos,
+        titulo: req.body.titulo,
+        descricao: req.body.descricao,
         JogoId: id,
     };
 
